@@ -12,11 +12,11 @@ Tristan JEUILLARD --- Nicolas DI GRANDE --- TD3
 
 ### Partie 1:
 1.d) En cas d’échec lors de la réservation (lignes à NULL), on désalloue les lignes à partir de l’indice (atteint -1) puis la matrice complète.
-coef --> 	
-[ [ Ligne 0 ] ] --> Allouée, à libérer  free(coef[0]).
-[ [ Ligne 1 ] ] --> Allouée, à libérer  free(coef[1]).
-[ NULL ] <-- ÉCHEC à i = 2 rien alloué, arrêt de la boucle.
-[ ? ] <-- Non atteinte.
+coef -->\	
+[ [ Ligne 0 ] ] --> Allouée, à libérer  free(coef[0]).\
+[ [ Ligne 1 ] ] --> Allouée, à libérer  free(coef[1]).\
+[ NULL ] <-- ÉCHEC à i = 2 rien alloué, arrêt de la boucle.\
+[ ? ] <-- Non atteinte.\
 
 Q3.1) Passer une matrice par valeur réalise une copie superficielle (le pointeur coef est dupliqué, pointant vers la même mémoire), ce qui rend les responsabilités de libération floues et empêche de remonter les erreurs. Par ailleurs, *free()* prend en paramètre une adresse.
 
