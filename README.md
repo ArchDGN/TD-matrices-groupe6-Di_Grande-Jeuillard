@@ -5,8 +5,7 @@ Tristan JEUILLARD --- Nicolas DI GRANDE --- TD3
 
 2) intro du sujet
 
-3) copie colle les graphs
-
+![Description de l'image](images/graphe1.png)
 
 ## questions de compréhension:
 
