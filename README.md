@@ -1,9 +1,15 @@
 # Matrice_C
-Tristan JEUILLARD --- Nicolas DI GRANDE --- TD3
+Tristan JEUILLARD @trijeu --- Nicolas DI GRANDE @Nicolas DG --- TD3
 
 # Compte rendu Implémentation des matrices
 
-2) intro du sujet
+## Sommaire
+- [Introduction](##Introduction)
+
+## Introduction
+Sujet: la création d'une bibliothèque (API) fonctionnelle en code C pour gérer des matrices sous forme textuelle dans des fichiers txt. La finalité est d'obtenir les fonctionnalités de création, lecture, affichage et sauvegarde des matrices tout en gérant les différents cas d'erreur. Ce projet est divisé en modules regroupant les interactions avec le système tel que la gestion en mémoire, le calcul ou les entrées - sorties. L'objectif est de savoir représenter et utiliser une structure similaire à une matrice en langage C, comprendre le principe de lecture écriture à partir d'un flux de données tout en évitant les fuites mémoires, et créer une bibliothèque C avec interfaces, implémentation puis compilation par édition de liens.
+
+Notre avancée est la suivante: Les 4 exercices sont réalisés en intégralité, avec des tests d'utilisations corrects, et aucune fuite mémoire repérée. Ce repository contient par ailleur tout nos codes .h et .c modifiés.
 
 ![Description de l'image](images/graphe1.png)
 
