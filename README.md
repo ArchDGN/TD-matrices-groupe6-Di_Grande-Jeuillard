@@ -7,6 +7,15 @@ Tristan JEUILLARD --- Nicolas DI GRANDE --- TD3
 
 ![Description de l'image](images/graphe1.png)
 
+### Règles de propriété de la mémoire retenues
+R1 Toute variable Matrice est initialisée à MATRICE_VIDE dès sa déclaration.
+R2 Une fonction qui réussit (MAT_OK) et remplit *res transfère la propriété du résultat à l’appelant, qui devra appeler mat_detruire(&res).
+R3 Une fonction qui échoue laisse *res égal à MATRICE_VIDE et a libéré tout ce qu’elle avait alloué : l’appelant n’a rien à libérer.
+R4 Une fonction ne modifie et ne libère jamais une matrice reçue en entrée (const Matrice *).
+R5 *res est un paramètre de sortie : son ancien contenu est écrasé. S’il possédait de la mémoire, l’appelant doit l’avoir détruite avant l’appel. res doit être distinct des entrées.
+R6 mat_detruire remet la matrice à MATRICE_VIDE : un second appel est sans effet.
+R7 Un fichier est fermé par le code qui l’a ouvert. Les fonctions de matrice_io reçoivent un flux déjà ouvert et ne le ferment jamais.
+
 ## questions de compréhension:
 
 ### Partie 1:
