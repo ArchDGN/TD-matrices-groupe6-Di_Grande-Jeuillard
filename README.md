@@ -1,7 +1,7 @@
-## Matrice_C
-Tristan JEUILLARD		Nicolas DI GRANDE	 	TD3
+# Matrice_C
+Tristan JEUILLARD \tNicolas DI GRANDE \tTD3
 
-# Compte rendu Implémentation des matrices
+# __Compte rendu Implémentation des matrices__
 
 2) intro du sujet
 
@@ -10,7 +10,7 @@ Tristan JEUILLARD		Nicolas DI GRANDE	 	TD3
 
 ## questions de compréhension:
 
-# Partie 1:
+### Partie 1:
 1.d) En cas d’échec lors de la réservation (lignes à NULL), on désalloue les lignes à partir de l’indice (atteint -1) puis la matrice complète.
 coef --> 	[ [ Ligne 0 ] ] --> Allouée, à libérer : free(coef[0]).
 [ [ Ligne 1 ] ] --> Allouée, à libérer : free(coef[1]).
@@ -28,7 +28,7 @@ Une copie de matrice en C est superficielle, B pointe vers les mêmes champs que
 Q3.4) On effectue l’affectation à la matrice nulle car une fonction qui échoue doit laisser *res à la matrice vide (dont les valeurs sont NULL) et libère les autres données. C’est la règle R3. Cela évite de rappeler mat_detruire() sur une donnée inconnue.
 
 
-# Partie 2:
+### Partie 2:
 Q4.1) La fonction mat_lire() remplit tmp, une variable locale, et non *res directement : si une erreur survient au milieu du fichier, l’appelant ne recevra jamais une matrice à moitié remplie donc incorrecte, mais bien une matrice nulle.
 
 Q4.2) La lecture ne vérifie pas que chaque ligne de texte correspond à une matrice. Cela n’est pas gênant car on applique le principe “tolérant en lecture, strict en écriture” soit tolérant sur les espaces, tabulations ou sauts de lignes via scanf, mais on devient strict pour respecter le format canonique en écriture.
@@ -38,7 +38,7 @@ Q4.3) En fin de fonction mat_lire, le flux pointe toujours vers le dernier coeff
 Q4.4) L’instruction flush permet de vider le buffer de la mémoire vers le fichier en écriture. Cela est également effectué par fclose mais il est plus juste de faire cette opération manuellement.
 
 
-# Partie 3:
+### Partie 3:
 Q5.1) Le préfixe const évite de modifier l’adresse des attributs de la matrice a lors des calculs, mais pas la valeur des coefficients pointés. Pour protéger les coeffs de A il faudrait passer toutes les lignes int** en const.
 
 Q5.2) Interdire l’alias (mat_additionner(&a, &b, &a) évite de modifier les données de A pendant le calcul en suivant les règles R3 / R5 en cas d’échec.
@@ -48,7 +48,7 @@ Q5.3) Pour deux matrices de taille (n,p) et (p,q) il faut n*p*q multiplications 
 Q5.4) Si (coef(a) + coef(b) > long long), on a une erreur de dépassement qui n’est pas repérée par s < a .
 
 
-# Partie 4:
+### Partie 4:
 Q6.1) On découple la gestion des erreurs et de l’affichage. Ainsi main est le programme principal qui peut donc être connecté à une interface graphique logicielle. On rend la bibliothèque indépendante.
 
 Q6.2) Le test de fclose en écriture sert à valider que les tampons (buffers) en mémoire ont bien été vidés sur le disque (détection de disque plein), une vérification inutile en lecture car aucun buffer n’est utilisé. 
