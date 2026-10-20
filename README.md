@@ -69,3 +69,9 @@ Q6.1) On découple la gestion des erreurs et de l’affichage. Ainsi main est le
 Q6.2) Le test de *fclose* en écriture sert à valider que les tampons (buffers) en mémoire ont bien été vidés sur le disque (détection de disque plein), une vérification inutile en lecture car aucun buffer n’est utilisé. 
 
 Q6.3) Dans le scénario 8, si l'enregistrement échoue après un calcul réussi, la matrice R a bien été allouée et il faut donc libérer 3 matrices -> A, B et R. Le *goto nettoyage* s’en charge correctement. 
+
+
+## Bilan et difficultés
+Nous avons compris l'importance de la modularisation afin d'avancer plus vite et en parallèle sur le code.
+Lors de notre travail, nous avons travaillés ensemble sur le code depuis l'environnement de Nicolas afin de tout deux avoir une bonne compréhension du sujet et de sa résolution. Nous avons ensuite divisé notre travail sur le compte rendu. Tristan a principalement rédigé le texte en introduction et conclusion, Nicolas a intégré les éléments de code ainsi que les diagrammes de la bibliothèque. Enfin nous avons répondu aux questions de compréhension ensemble pour garder un apprentissage complet sur le projet.
+Pour nous aider dans la confection de ce compte rendu, l'IA gemini de google nous a aidé à corriger la  mise en forme sous markdown qui nous était inconnu, ainsi que pour extraire des portions de code qui se situent plus haut. Nous avons prioritisé notre apprentissage en code C et l'usage d'IA à donc été absent pendant la phase de développement.
