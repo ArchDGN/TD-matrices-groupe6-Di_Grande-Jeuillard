@@ -7,10 +7,10 @@ remis le 25/11
 ## Sommaire
 - [Introduction](#introduction)
 - [Conception de la bibliothèque](#Conception-de-la-bibliothèque)
-- [Exercice 1](#Exercice-1)
-- [Exercice 2](#Exercice-2)
-- [Exercice 3](#Exercice-3)
-- [Exercice 4](#Exercice-4)
+- [Exercice 1 - Allocation et destruction](#Exercice-1)
+- [Exercice 2 - Entrées sorties](#Exercice-2)
+- [Exercice 3 - Calcul matriciel](#Exercice-3)
+- [Exercice 4 - Démonstration complète](#Exercice-4)
 - [Autres Scénarios](#Autres-Scénarios)
 - [Bilan du projet](#bilan-et-difficultés)
 
