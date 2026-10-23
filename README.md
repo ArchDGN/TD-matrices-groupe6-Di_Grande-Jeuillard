@@ -7,10 +7,11 @@ remis le 25/11
 ## Sommaire
 - [Introduction](#introduction)
 - [Conception de la bibliothèque](#Conception-de-la-bibliothèque)
-- [Exercice 1](#Exercice1)
-- [Exercice 2](#Exercice2)
-- [Exercice 3](#Exercice3)
-- [Exercice 4](#Exercice4)
+- [Exercice 1](#Exercice-1)
+- [Exercice 2](#Exercice-2)
+- [Exercice 3](#Exercice-3)
+- [Exercice 4](#Exercice-4)
+- [Autres Scénarios](#Autres-Scénarios)
 - [Bilan du projet](#bilan-et-difficultés)
 
 ## Introduction
@@ -18,7 +19,7 @@ Sujet: la création d'une bibliothèque (API) fonctionnelle en code C pour gére
 
 Notre avancée est la suivante: Les 4 exercices sont réalisés en intégralité, avec des tests d'utilisations corrects, et aucune fuite mémoire repérée. Ce repository contient par ailleur tous nos codes .h et .c modifiés.
 
-##Conception de la bibliothèque:
+## Conception de la bibliothèque:
 ![Description de l'image](images/graphe1.png)
 
 ### Règles de propriété de la mémoire retenues
@@ -464,6 +465,289 @@ Q6.1) On découple la gestion des erreurs et de l’affichage. Ainsi main est le
 Q6.2) Le test de *fclose* en écriture sert à valider que les tampons (buffers) en mémoire ont bien été vidés sur le disque (détection de disque plein), une vérification inutile en lecture car aucun buffer n’est utilisé. 
 
 Q6.3) Dans le scénario 8, si l'enregistrement échoue après un calcul réussi, la matrice R a bien été allouée et il faut donc libérer 3 matrices -> A, B et R. Le *goto nettoyage* s’en charge correctement. 
+
+## Autres Scénarios
+* [Scénario 2 : `mul A.txt C.txt R.txt`](#scénario-2--mul-atxt-ctxt-rtxt)
+* [Scénario 3 : `add A.txt C.txt R.txt`](#scénario-3--add-atxt-ctxt-rtxt)
+* [Scénario 4 : `mul A.txt B.txt R.txt`](#scénario-4--mul-atxt-btxt-rtxt)
+* [Scénario 5 : Fichier `absent.txt`](#scénario-5--fichier-absenttxt)
+* [Scénario 6 : `invalide.txt` comme A](#scénario-6--invalidetxt-comme-a)
+* [Scénario 7 : `tronque.txt` comme A](#scénario-7--tronquetxt-comme-a)
+* [Scénario 8 : Résultat dans un dossier inexistant](#scénario-8--résultat-dans-un-dossier-inexistant)
+* [Scénario 10 : Arguments manquants ou opération inconnue](#scénario-10--arguments-manquants-ou-opération-inconnue)
+
+## Bilan et difficultés
+Nous avons compris l'importance de la modularisation afin d'avancer plus vite et en parallèle sur le code.
+Lors de notre travail, nous avons travaillé ensemble sur le code depuis l'environnement de Nicolas afin d'avoir tous deux une bonne compréhension du sujet et de sa résolution. Nous avons ensuite divisé notre travail sur le compte rendu. Tristan a principalement rédigé le texte en introduction et conclusion, Nicolas a intégré les éléments de code ainsi que les diagrammes de la bibliothèque. Enfin nous avons répondu aux questions de compréhension ensemble pour garder un apprentissage complet sur le projet.
+Pour nous aider dans la confection de ce compte rendu, l'IA gemini de google nous a aidé à corriger la  mise en forme sous markdown qui nous était inconnu, ainsi que pour extraire des portions de code qui se situent plus haut. Nous avons priorisé notre apprentissage en code C et l'usage d'IA a donc été absent pendant la phase de développement.
+
+
+## Scénarios supplémentaires:
+### Scénario 2 : `mul A.txt C.txt R.txt`
+**Comportement attendu :** affiche $A$, $B$, $R$ de dimensions $4 \times 2$ ; `R.txt` créé au format canonique (Sortie : `0`).
+
+```text
+valgrind --leak-check=full ./demo_matrices mul donnees/A.txt donnees/C.txt R.txt
+echo "Code de sortie : $?"
+==3810== Memcheck, a memory error detector
+==3764== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3810== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3810== Command: ./demo_matrices mul donnees/A.txt donnees/C.txt R.txt
+==3810==
+A (4 x 3) :
+       25       48       84
+       15       33       11
+       45       88       10
+        0       12       -5
+B (3 x 2) :
+        1        0
+        0        1
+        2       -1
+R = A x B (4 x 2) :
+      193      -36
+       37       22
+       65       78
+      -10       17
+Résultat enregistré dans "R.txt".
+==3810==
+==3810== HEAP SUMMARY:
+==3810==     in use at exit: 0 bytes in 0 blocks
+==3810==   total heap usage: 21 allocs, 21 frees, 14,920 bytes allocated
+==3810==
+==3810== All heap blocks were freed -- no leaks are possible
+==3810==
+==3810== For lists of detected and suppressed errors, rerun with: -s
+==3810== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 0
+```
+
+### Scénario 3 : `add A.txt C.txt R.txt`
+**Comportement attendu :** « dimensions incompatibles », avec les dimensions ; pas de fichier créé (Sortie : `1`).
+
+```text
+rm -f R.txt R2.txt
+valgrind --leak-check=full ./demo_matrices add donnees/A.txt donnees/C.txt R.txt
+echo "Code de sortie : $?"
+ls -l R.txt
+==3831== Memcheck, a memory error detector
+==3831== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3831== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3831== Command: ./demo_matrices add donnees/A.txt donnees/C.txt R.txt
+==3831==
+A (4 x 3) :
+       25       48       84
+       15       33       11
+       45       88       10
+        0       12       -5
+B (3 x 2) :
+        1        0
+        0        1
+        2       -1
+Erreur : calcul impossible : dimensions incompatibles (A : 4 x 3, B : 3 x 2)
+==3831==
+==3831== HEAP SUMMARY:
+==3831==     in use at exit: 0 bytes in 0 blocks
+==3831==   total heap usage: 14 allocs, 14 frees, 10,288 bytes allocated
+==3831==
+==3831== All heap blocks were freed -- no leaks are possible
+==3831== 
+==3831== For lists of detected and suppressed errors, rerun with: -s
+==3831== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 1
+ls: cannot access 'R.txt': No such file or directory
+```
+
+### Scénario 4 : `mul A.txt B.txt R.txt`
+**Comportement attendu :** « dimensions incompatibles », avec les dimensions ($4 \times 3$ par $4 \times 3$) ; pas de fichier créé (Sortie : `1`).
+
+```text
+valgrind --leak-check=full ./demo_matrices mul donnees/A.txt donnees/B.txt R.txt
+echo "Code de sortie : $?"
+==3852== Memcheck, a memory error detector
+==3852== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3852== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3852== Command: ./demo_matrices mul donnees/A.txt donnees/B.txt R.txt
+==3852==
+A (4 x 3) :
+       25       48       84
+       15       33       11
+       45       88       10
+        0       12       -5
+B (4 x 3) :
+        1        2        3
+        4        5        6
+        7        8        9
+       10       11       12
+Erreur : calcul impossible : dimensions incompatibles (A : 4 x 3, B : 4 x 3)
+==3852==
+==3852== HEAP SUMMARY:
+==3852==     in use at exit: 0 bytes in 0 blocks
+==3852==   total heap usage: 15 allocs, 15 frees, 10,320 bytes allocated
+==3852==
+==3852== All heap blocks were freed -- no leaks are possible
+==3852==
+==3852== For lists of detected and suppressed errors, rerun with: -s
+==3852== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 1
+```
+
+### Scénario 5 : Fichier `absent.txt`
+**Comportement attendu :** « impossible d'ouvrir » + cause système (Sortie : `1`).
+
+```text
+valgrind --leak-check=full ./demo_matrices add donnees/absent.txt donnees/B.txt R.txt
+echo "Code de sortie : $?"
+==3867== Memcheck, a memory error detector
+==3867== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3867== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3867== Command: ./demo_matrices add donnees/absent.txt donnees/B.txt R.txt
+==3867==
+Erreur : impossible d'ouvrir "donnees/absent.txt" : No such file or directory
+==3867==
+==3867== HEAP SUMMARY:
+==3867==     in use at exit: 0 bytes in 0 blocks
+==3867==   total heap usage: 3 allocs, 3 frees, 494 bytes allocated
+==3867==
+==3867== All heap blocks were freed -- no leaks are possible
+==3867== 
+==3867== For lists of detected and suppressed errors, rerun with: -s
+==3867== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 1
+```
+
+### Scénario 6 : `invalide.txt` comme $A$
+**Comportement attendu :** « fichier mal formé », avec le nom du fichier (Sortie : `1`).
+
+```text
+valgrind --leak-check=full ./demo_matrices add donnees/invalide.txt donnees/B.txt R.txt
+echo "Code de sortie : $?"
+==3882== Memcheck, a memory error detector
+==3882== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3882== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3882== Command: ./demo_matrices add donnees/invalide.txt donnees/B.txt R.txt
+==3882==
+Erreur : lecture de "donnees/invalide.txt" : fichier mal formé
+==3882== 
+==3882== HEAP SUMMARY:
+==3882==     in use at exit: 0 bytes in 0 blocks
+==3882==   total heap usage: 5 allocs, 5 frees, 4,600 bytes allocated
+==3882== 
+==3882== All heap blocks were freed -- no leaks are possible
+==3882==
+==3882== For lists of detected and suppressed errors, rerun with: -s
+==3882== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 1
+```
+
+### Scénario 7 : `tronque.txt` comme $A$
+**Comportement attendu :** « fichier mal formé » (Sortie : `1`).
+
+```text
+valgrind --leak-check=full ./demo_matrices add donnees/tronque.txt donnees/B.txt R.txt
+echo "Code de sortie : $?"
+==3897== Memcheck, a memory error detector
+==3897== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3897== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3897== Command: ./demo_matrices add donnees/tronque.txt donnees/B.txt R.txt
+==3897==
+Erreur : lecture de "donnees/tronque.txt" : fichier mal formé
+==3897==
+==3897== HEAP SUMMARY:
+==3897==     in use at exit: 0 bytes in 0 blocks
+==3897==   total heap usage: 6 allocs, 6 frees, 4,628 bytes allocated
+==3897==
+==3897== All heap blocks were freed -- no leaks are possible
+==3897==
+==3897== For lists of detected and suppressed errors, rerun with: -s
+==3897== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 1
+```
+
+### Scénario 8 : Résultat dans un dossier inexistant
+**Comportement attendu :** « impossible de créer » ; matrices libérées (Sortie : `1`).
+
+```text
+valgrind --leak-check=full ./demo_matrices add donnees/A.txt donnees/B.txt dossier_inexistant/R.txt
+echo "Code de sortie : $?"
+==3912== Memcheck, a memory error detector
+==3912== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3912== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3912== Command: ./demo_matrices add donnees/A.txt donnees/B.txt dossier_inexistant/R.txt
+==3912==
+A (4 x 3) :
+       25       48       84
+       15       33       11
+       45       88       10
+        0       12       -5
+B (4 x 3) :
+        1        2        3
+        4        5        6
+        7        8        9
+       10       11       12
+R = A + B (4 x 3) :
+       26       50       87
+       19       38       17
+       52       96       19
+       10       23        7
+Erreur : impossible de créer "dossier_inexistant/R.txt" : No such file or directory
+==3912==
+==3912== HEAP SUMMARY:
+==3912==     in use at exit: 0 bytes in 0 blocks
+==3912==   total heap usage: 23 allocs, 23 frees, 10,894 bytes allocated
+==3912==
+==3912== All heap blocks were freed -- no leaks are possible
+==3912==
+==3912== For lists of detected and suppressed errors, rerun with: -s
+==3912== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 1
+```
+
+### Scénario 10 : Arguments manquants ou opération inconnue
+**Comportement attendu :** message d'usage (Sortie : `1`).
+
+```text
+# Test 10a : arguments manquants
+valgrind --leak-check=full ./demo_matrices add donnees/A.txt
+echo "Code de sortie : $?"
+==3931== Memcheck, a memory error detector
+==3931== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3931== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3931== Command: ./demo_matrices add donnees/A.txt
+==3931== 
+Usage : ./demo_matrices <add|mul> <fichier_A> <fichier_B> <fichier_R>
+==3931== 
+==3931== HEAP SUMMARY:
+==3931==     in use at exit: 0 bytes in 0 blocks
+==3931==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==3931== 
+==3931== All heap blocks were freed -- no leaks are possible
+==3931== 
+==3931== For lists of detected and suppressed errors, rerun with: -s
+==3931== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 1
+```
+
+```text
+# Test 10b : opération inconnue ("sub" au lieu de "add" ou "mul")
+valgrind --leak-check=full ./demo_matrices sub donnees/A.txt donnees/B.txt R.txt
+echo "Code de sortie : $?"
+==3946== Memcheck, a memory error detector
+==3946== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
+==3946== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
+==3946== Command: ./demo_matrices sub donnees/A.txt donnees/B.txt R.txt
+==3946== 
+Usage : ./demo_matrices <add|mul> <fichier_A> <fichier_B> <fichier_R>
+==3946== 
+==3946== HEAP SUMMARY:
+==3946==     in use at exit: 0 bytes in 0 blocks
+==3946==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
+==3946== 
+==3946== All heap blocks were freed -- no leaks are possible
+==3946== 
+==3946== For lists of detected and suppressed errors, rerun with: -s
+==3946== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+Code de sortie : 1
+```
 
 
 
