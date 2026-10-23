@@ -23,13 +23,13 @@ Notre avancée est la suivante: Les 4 exercices sont réalisés en intégralité
 ![Description de l'image](images/graphe1.png)
 
 ### Règles de propriété de la mémoire retenues
-R1 Toute variable Matrice est initialisée à MATRICE_VIDE dès sa déclaration.\
-R2 Une fonction qui réussit (MAT_OK) et remplit *res transfère la propriété du résultat à l’appelant, qui devra appeler mat_detruire(&res).\
-R3 Une fonction qui échoue laisse *res égal à MATRICE_VIDE et a libéré tout ce qu’elle avait alloué : l’appelant n’a rien à libérer.\
-R4 Une fonction ne modifie et ne libère jamais une matrice reçue en entrée (const Matrice *).\
-R5 *res est un paramètre de sortie : son ancien contenu est écrasé. S’il possédait de la mémoire, l’appelant doit l’avoir détruite avant l’appel. res doit être distinct des entrées.\
-R6 mat_detruire remet la matrice à MATRICE_VIDE : un second appel est sans effet.\
-R7 Un fichier est fermé par le code qui l’a ouvert. Les fonctions de matrice_io reçoivent un flux déjà ouvert et ne le ferment jamais.\
+R1: Toute variable Matrice est initialisée à MATRICE_VIDE dès sa déclaration.\
+R2: Une fonction qui réussit (MAT_OK) et remplit *res transfère la propriété du résultat à l’appelant, qui devra appeler mat_detruire(&res).\
+R3: Une fonction qui échoue laisse *res égal à MATRICE_VIDE et a libéré tout ce qu’elle avait alloué : l’appelant n’a rien à libérer.\
+R4: Une fonction ne modifie et ne libère jamais une matrice reçue en entrée (const Matrice *).\
+R5: *res est un paramètre de sortie : son ancien contenu est écrasé. S’il possédait de la mémoire, l’appelant doit l’avoir détruite avant l’appel. res doit être distinct des entrées.\
+R6: mat_detruire remet la matrice à MATRICE_VIDE : un second appel est sans effet.\
+R7: Un fichier est fermé par le code qui l’a ouvert. Les fonctions de matrice_io reçoivent un flux déjà ouvert et ne le ferment jamais.\
 
 ### Compilation:
 Il est possible d'utiliser le fichier Makefile pour compiler la bibliothèque.
@@ -480,6 +480,8 @@ Q6.3) Dans le scénario 8, si l'enregistrement échoue après un calcul réussi,
 Nous avons compris l'importance de la modularisation afin d'avancer plus vite et en parallèle sur le code.
 Lors de notre travail, nous avons travaillé ensemble sur le code depuis l'environnement de Nicolas afin d'avoir tous deux une bonne compréhension du sujet et de sa résolution. Nous avons ensuite divisé notre travail sur le compte rendu. Tristan a principalement rédigé le texte en introduction et conclusion, Nicolas a intégré les éléments de code ainsi que les diagrammes de la bibliothèque. Enfin nous avons répondu aux questions de compréhension ensemble pour garder un apprentissage complet sur le projet.
 Pour nous aider dans la confection de ce compte rendu, l'IA gemini de google nous a aidé à corriger la  mise en forme sous markdown qui nous était inconnu, ainsi que pour extraire des portions de code qui se situent plus haut. Nous avons priorisé notre apprentissage en code C et l'usage d'IA a donc été absent pendant la phase de développement.
+
+
 
 
 ## Scénarios supplémentaires:
