@@ -82,11 +82,11 @@ gcc -std=c11 -Wall -Wextra -Wpedantic -g -DMAT_TEST_ALLOC test_ex3.c matrice.c m
     return MAT_OK;
 
 /* (1.f) */
-    for (int j = 0 ; j < m->nb_lignes; j++)  // lignes déjà
-        free(m->coef[j]);                // obtenues
-
-    free(m->coef); 
-
+    if (m->coef != NULL) {
+        for (int j = 0; j < m->nb_lignes; j++) // lignes déjà
+            free(m->coef[j]);        // obtenues
+        free(m->coef);
+    }
 
     *m = MATRICE_VIDE;   /* FOURNI : état sûr après destruction (R6) */
 ```
