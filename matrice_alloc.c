@@ -83,7 +83,7 @@ MatErreur mat_allouer(Matrice *res, int nb_lignes, int nb_colonnes)
 
 void mat_detruire(Matrice *m)
 {
-    if (m->coef == NULL)                 /* FOURNI */
+    if (m == NULL)                 /* FOURNI */
         return;
 
     /* (1.f) À COMPLÉTER : si m->coef n'est pas NULL :
