@@ -636,7 +636,7 @@ Code de sortie : 1
     *m = MATRICE_VIDE;   /* FOURNI : état sûr après destruction (R6) */
 ```
 
-## Exercice 2 :\
+### Exercice 2 :\
 ```text
 /* (2.a) */
     for (int i = 0; i < m->nb_lignes; i++) {
@@ -686,7 +686,7 @@ Code de sortie : 1
     return MAT_OK;
 ```
 
-## Exercice 3 :\
+### Exercice 3 :\
 ```text
 
 /* (3.a) */
@@ -734,7 +734,7 @@ Code de sortie : 1
     return MAT_OK;
 ```
 
-## Exercice 4 :\
+### Exercice 4 :\
 ```text
 
 /* (4.a) À COMPLÉTER : afficher A et B avec mat_afficher.          */
