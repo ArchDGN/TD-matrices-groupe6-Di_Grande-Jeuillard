@@ -90,10 +90,11 @@ void mat_detruire(Matrice *m)
      *         - libérer chaque ligne m->coef[i], i de 0 à nb_lignes - 1 ;
      *         - PUIS libérer le tableau m->coef lui-même.              */
 
-    for (int j = 0 ; j < m->nb_lignes; j++)  // lignes déjà
-        free(m->coef[j]);                // obtenues
-
-    free(m->coef); 
+    if (m->coef != NULL) {
+        for (int j = 0; j < m->nb_lignes; j++) // lignes déjà
+            free(m->coef[j]);        // obtenues
+        free(m->coef);
+    }
 
 
     *m = MATRICE_VIDE;   /* FOURNI : état sûr après destruction (R6) */
