@@ -4,7 +4,10 @@ Tristan JEUILLARD @trijeu --- Nicolas DI GRANDE @Nicolas DG --- TD3
 # Compte rendu Implémentation des matrices
 
 ## Sommaire
-- [Introduction](##Introduction)
+- [Introduction](#introduction)
+- [Questions de compréhension](#questions-de-compréhension)
+- [Compilation](#compilation-du-projet)
+- [Bilan du projet](#bilan-et-difficultés)
 
 ## Introduction
 Sujet: la création d'une bibliothèque (API) fonctionnelle en code C pour gérer des matrices sous forme textuelle dans des fichiers txt. La finalité est d'obtenir les fonctionnalités de création, lecture, affichage et sauvegarde des matrices tout en gérant les différents cas d'erreur. Ce projet est divisé en modules regroupant les interactions avec le système tel que la gestion en mémoire, le calcul ou les entrées - sorties. L'objectif est de savoir représenter et utiliser une structure similaire à une matrice en langage C, comprendre le principe de lecture écriture à partir d'un flux de données tout en évitant les fuites mémoires, et créer une bibliothèque C avec interfaces, implémentation puis compilation par édition de liens.
@@ -79,7 +82,7 @@ Pour nous aider dans la confection de ce compte rendu, l'IA gemini de google nou
 
 # Validation et Scénarios de Test — Projet Matrices en C
 
-## 1. Compilation du projet
+## Compilation du projet
 
 Compilation complète avec `-std=c11 -Wall -Wextra -Wpedantic -g` sans aucun avertissement :
 
