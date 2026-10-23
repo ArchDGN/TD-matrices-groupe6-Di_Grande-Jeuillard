@@ -1,10 +1,12 @@
 # Matrice_C
-Tristan JEUILLARD @trijeu --- Nicolas DI GRANDE @Nicolas DG --- TD3
+Tristan JEUILLARD @trijeu --- Nicolas DI GRANDE @ArchDGN --- TD3
+remis le 25/11
 
 # Compte rendu Implémentation des matrices
 
 ## Sommaire
 - [Introduction](#introduction)
+- [Conception de la bibliothèque](#Conception-de-la-bibliothèque)
 - [Questions de compréhension](#questions-de-compréhension)
 - [Compilation](#compilation-du-projet)
 - [Bilan du projet](#bilan-et-difficultés)
@@ -14,6 +16,7 @@ Sujet: la création d'une bibliothèque (API) fonctionnelle en code C pour gére
 
 Notre avancée est la suivante: Les 4 exercices sont réalisés en intégralité, avec des tests d'utilisations corrects, et aucune fuite mémoire repérée. Ce repository contient par ailleur tout nos codes .h et .c modifiés.
 
+##Conception de la bibliothèque:
 ![Description de l'image](images/graphe1.png)
 
 ### Règles de propriété de la mémoire retenues
@@ -84,6 +87,7 @@ Pour nous aider dans la confection de ce compte rendu, l'IA gemini de google nou
 
 ## Compilation du projet
 
+Il est possible d'utiliser le fichier Makefile pour compiler la bibliothèque.
 Compilation complète avec `-std=c11 -Wall -Wextra -Wpedantic -g` sans aucun avertissement :
 
 ```text
