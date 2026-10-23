@@ -1,6 +1,6 @@
 # Matrice_C
 Tristan JEUILLARD [@trijeu](https://github.com/trijeu) --- Nicolas DI GRANDE [@ArchDGN](https://github.com/ArchDGN) --- TD3
-remis le 25/11
+remis le 23/10
 
 # Compte rendu Implémentation des matrices
 
