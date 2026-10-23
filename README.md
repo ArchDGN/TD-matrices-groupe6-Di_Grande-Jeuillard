@@ -478,8 +478,8 @@ Q6.3) Dans le scénario 8, si l'enregistrement échoue après un calcul réussi,
 
 ## Bilan et difficultés
 Nous avons compris l'importance de la modularisation afin d'avancer plus vite et en parallèle sur le code.
-Lors de notre travail, nous avons travaillé ensemble sur le code depuis l'environnement de Nicolas afin d'avoir tous deux une bonne compréhension du sujet et de sa résolution. Nous avons ensuite divisé notre travail sur le compte rendu. Tristan a principalement rédigé le texte en introduction et conclusion, Nicolas a intégré les éléments de code ainsi que les diagrammes de la bibliothèque. Enfin nous avons répondu aux questions de compréhension ensemble pour garder un apprentissage complet sur le projet.
-Pour nous aider dans la confection de ce compte rendu, l'IA gemini de google nous a aidé à corriger la  mise en forme sous markdown qui nous était inconnu, ainsi que pour extraire des portions de code qui se situent plus haut. Nous avons priorisé notre apprentissage en code C et l'usage d'IA a donc été absent pendant la phase de développement.
+Lors de notre travail, nous avons travaillé ensemble sur le code depuis l'environnement de Nicolas afin d'avoir tous deux une bonne compréhension du sujet et de sa résolution. Nous avons ensuite divisé notre travail sur le compte rendu. Tristan a principalement rédigé le texte en introduction et conclusion, Nicolas a intégré les éléments de code ainsi que les diagrammes de la bibliothèque. Enfin nous avons répondu aux questions de compréhension ensemble pour garder un apprentissage complet sur le projet. Au final notre participation dans le projet aura été égale.
+Pour nous aider dans la confection de ce compte rendu, le LLM Gemini Argon de Google nous a aidé à corriger la  mise en forme sous markdown qui nous était inconnu, ainsi que pour extraire des portions de code qui se situent plus haut. Nous avons priorisé notre apprentissage en code C et l'usage d'IA a donc été absent pendant la phase de développement.
 
 
 
