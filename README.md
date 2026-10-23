@@ -483,6 +483,7 @@ Pour nous aider dans la confection de ce compte rendu, le LLM Gemini Argon de Go
 \
 \
 \
+
 ## Scénarios supplémentaires:
 ### Scénario 2 : `mul A.txt C.txt R.txt`
 **Comportement attendu :** affiche $A$, $B$, $R$ de dimensions $4 \times 2$ ; `R.txt` créé au format canonique (Sortie : `0`).
