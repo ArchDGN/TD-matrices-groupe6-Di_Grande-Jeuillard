@@ -7,8 +7,10 @@ remis le 25/11
 ## Sommaire
 - [Introduction](#introduction)
 - [Conception de la bibliothèque](#Conception-de-la-bibliothèque)
-- [Questions de compréhension](#questions-de-compréhension)
-- [Compilation](#compilation-du-projet)
+- [Exercice 1](#Exercice1)
+- [Exercice 2](#Exercice2)
+- [Exercice 3](#Exercice3)
+- [Exercice 4](#Exercice4)
 - [Bilan du projet](#bilan-et-difficultés)
 
 ## Introduction
@@ -28,68 +30,9 @@ R5 *res est un paramètre de sortie : son ancien contenu est écrasé. S’il po
 R6 mat_detruire remet la matrice à MATRICE_VIDE : un second appel est sans effet.\
 R7 Un fichier est fermé par le code qui l’a ouvert. Les fonctions de matrice_io reçoivent un flux déjà ouvert et ne le ferment jamais.\
 
-## questions de compréhension:
-
-### Partie 1:
-1.d) En cas d’échec lors de la réservation (lignes à NULL), on désalloue les lignes à partir de l’indice (atteint -1) puis la matrice complète.
-coef -->\	
-[ [ Ligne 0 ] ] --> Allouée, à libérer  free(coef[0]).\
-[ [ Ligne 1 ] ] --> Allouée, à libérer  free(coef[1]).\
-[ NULL ] <-- ÉCHEC à i = 2 rien alloué, arrêt de la boucle.\
-[ ? ] <-- Non atteinte.\
-
-Q3.1) Passer une matrice par valeur réalise une copie superficielle (le pointeur coef est dupliqué, pointant vers la même mémoire), ce qui rend les responsabilités de libération floues et empêche de remonter les erreurs. Par ailleurs, *free()* prend en paramètre une adresse pour bien effacer la variable pointée et non une copie.
-
-Q3.2) Il faut N+1 appels à *calloc* et *free->* au total: un par ligne et le dernier pour la matrice elle-même. Si la k-ième allocation échoue (en numérotant les allocations de lignes de 1 à n), seules les lignes à partir de k ne sont pas allouées (donc null). Il faut donc libérer les lignes avant k, et la matrice elle-même donc (k-1) +1)) = k appels.
-
-Q3.3) Appeler *free()* deux fois est indéterminé car on ne connaît pas la donnée au deuxième appel (donnée d’un autre programme). Dans *mat_detruire*, on termine l'appel par **m = MATRICE_VIDE*. Donc au deuxième appel la condition
-*(m->coef!=NULL)* permet de ne pas appliquer le *free()* deux fois.
-Une copie de matrice en C est superficielle, B pointe vers les mêmes champs que A, donc si on libère A, B garde ses pointeurs vers une donnée inconnue, ce qui crée un comportement indéfini.
-
-Q3.4) On effectue l’affectation à la matrice nulle car une fonction qui échoue doit laisser *res à la matrice vide (dont les valeurs sont NULL) et libère les autres données. C’est la règle R3. Cela évite de rappeler *mat_detruire()* sur une donnée inconnue.
-
-
-### Partie 2:
-Q4.1) La fonction *mat_lire()* remplit *tmp*, une variable locale, et non **res* directement : si une erreur survient au milieu du fichier, l’appelant ne recevra jamais une matrice à moitié remplie donc incorrecte, mais bien une matrice nulle.
-
-Q4.2) La lecture ne vérifie pas que chaque ligne de texte correspond à une ligne de la matrice. Cela n’est pas gênant car on applique le principe “tolérant en lecture, strict en écriture” soit tolérant sur les espaces, tabulations ou sauts de lignes via *scanf* pour des fichiers écrits manuellement, mais on devient strict pour respecter le format canonique en écriture.
-
-Q4.3) En fin de fonction *mat_lire*, le flux pointe toujours vers le dernier coefficient lu. On peut donc suivre directement sur un autre appel de *mat_lire* sur le flux pour lire séquentiellement une autre matrice.
-
-Q4.4) L’instruction *flush* permet de vider le buffer de la mémoire vers le fichier en écriture. Cela est également effectué par *fclose* mais il est plus juste de faire cette opération manuellement.
-
-
-### Partie 3:
-Q5.1) Le préfixe const évite de modifier l’adresse des attributs de la matrice A lors des calculs, mais pas la valeur des coefficients pointés. Pour protéger les coeffs de A il faudrait passer toutes les lignes *int*** en *const*.
-
-Q5.2) Interdire l’alias *(mat_additionner(&a, &b, &a)* évite de modifier les données de A pendant le calcul en suivant les règles R3 / R5 en cas d’échec.
-
-Q5.3) Pour deux matrices de taille (n,p) et (p,q) il faut n*p*q multiplications d’entiers pour effectuer le produit matriciel. Avec des matrices carrées de taille 1000, il en faut 1000^3 soit 10^9.
-
-Q5.4) Si *(coef(a) + coef(b) > long long)*, on a une erreur de dépassement qui n’est pas repérée par s < a .
-
-
-### Partie 4:
-Q6.1) On découple la gestion des erreurs et de l’affichage. Ainsi main est le programme principal qui peut donc être connecté à une interface graphique logicielle. On rend la bibliothèque indépendante.
-
-Q6.2) Le test de *fclose* en écriture sert à valider que les tampons (buffers) en mémoire ont bien été vidés sur le disque (détection de disque plein), une vérification inutile en lecture car aucun buffer n’est utilisé. 
-
-Q6.3) Dans le scénario 8, si l'enregistrement échoue après un calcul réussi, la matrice R a bien été allouée et il faut donc libérer 3 matrices -> A, B et R. Le *goto nettoyage* s’en charge correctement. 
-
-
-## Bilan et difficultés
-Nous avons compris l'importance de la modularisation afin d'avancer plus vite et en parallèle sur le code.
-Lors de notre travail, nous avons travaillé ensemble sur le code depuis l'environnement de Nicolas afin d'avoir tous deux une bonne compréhension du sujet et de sa résolution. Nous avons ensuite divisé notre travail sur le compte rendu. Tristan a principalement rédigé le texte en introduction et conclusion, Nicolas a intégré les éléments de code ainsi que les diagrammes de la bibliothèque. Enfin nous avons répondu aux questions de compréhension ensemble pour garder un apprentissage complet sur le projet.
-Pour nous aider dans la confection de ce compte rendu, l'IA gemini de google nous a aidé à corriger la  mise en forme sous markdown qui nous était inconnu, ainsi que pour extraire des portions de code qui se situent plus haut. Nous avons priorisé notre apprentissage en code C et l'usage d'IA a donc été absent pendant la phase de développement.
-
-
-# Validation et Scénarios de Test — Projet Matrices en C
-
-## Compilation du projet
-
+### Compilation:
 Il est possible d'utiliser le fichier Makefile pour compiler la bibliothèque.
 Compilation complète avec `-std=c11 -Wall -Wextra -Wpedantic -g` sans aucun avertissement :
-
 ```text
 make clean && make
 rm -f *.o demo_matrices test_ex1 test_ex2 test_ex3 test_ex2_sortie.txt
@@ -99,12 +42,54 @@ gcc -std=c11 -Wall -Wextra -Wpedantic -g -DMAT_TEST_ALLOC test_ex2.c matrice.c m
 gcc -std=c11 -Wall -Wextra -Wpedantic -g -DMAT_TEST_ALLOC test_ex3.c matrice.c matrice_alloc.c matrice_calcul.c -o test_ex3
 ```
 
----
+## Exercice 1:
+### Code
+```text
+/* (1.a) */
+    case MAT_ERR_DIMENSIONS: return "dimensions incompatibles";
+    case MAT_ERR_DEPASSEMENT: return "resultat hors de l’intervalle des int";
 
-## 2. Tests unitaires des modules (Exercices 1, 2, 3 et Scénario 9)
+/* (1.b) */
+    return  m != NULL
+            && m->coef != NULL
+            && m->nb_lignes >= 1 && m->nb_lignes <= MAT_DIM_MAX
+            && m->nb_colonnes >= 1 && m->nb_colonnes <= MAT_DIM_MAX;
 
-### Exercice 1 : Allocation, destruction et échecs d'allocation simulés (`test_ex1`)
+/* (1.c) */
+    if (nb_lignes < 1 || nb_lignes > MAT_DIM_MAX)
+        return MAT_ERR_ARGUMENT;
 
+    if (nb_colonnes < 1 || nb_colonnes > MAT_DIM_MAX)
+        return MAT_ERR_ARGUMENT;
+
+/* (1.d) */
+    for (int i = 0; i < nb_lignes; i++) {
+        coef[i] = mat_calloc((size_t)nb_colonnes, sizeof *coef[i]);    // nb_colonnes entiers
+        if (coef[i] == NULL) {
+            for (int k = i - 1; k >= 0; k--)  // lignes déjà
+                free(coef[k]);                // obtenues
+            free(coef);                       // puis le tableau
+            return MAT_ERR_ALLOCATION;
+        }
+    }
+
+/* (1.e) */
+    res->coef = coef;
+    res->nb_lignes = nb_lignes;
+    res->nb_colonnes = nb_colonnes;
+
+    return MAT_OK;
+
+/* (1.f) */
+    for (int j = 0 ; j < m->nb_lignes; j++)  // lignes déjà
+        free(m->coef[j]);                // obtenues
+
+    free(m->coef); 
+
+
+    *m = MATRICE_VIDE;   /* FOURNI : état sûr après destruction (R6) */
+```
+### Execution
 ```text
 valgrind --leak-check=full ./test_ex1
 ==3744== Memcheck, a memory error detector
@@ -145,8 +130,75 @@ Pensez a verifier l'absence de fuite : valgrind --leak-check=full ./test_ex1
 ==3744== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
 
-### Exercice 2 : Entrées-sorties et Scénario 9 — échec d'allocation simulé (`test_ex2`)
+### Questions:
+1.d) En cas d’échec lors de la réservation (lignes à NULL), on désalloue les lignes à partir de l’indice (atteint -1) puis la matrice complète.
+coef -->\	
+[ [ Ligne 0 ] ] --> Allouée, à libérer  free(coef[0]).\
+[ [ Ligne 1 ] ] --> Allouée, à libérer  free(coef[1]).\
+[ NULL ] <-- ÉCHEC à i = 2 rien alloué, arrêt de la boucle.\
+[ ? ] <-- Non atteinte.\
 
+Q3.1) Passer une matrice par valeur réalise une copie superficielle (le pointeur coef est dupliqué, pointant vers la même mémoire), ce qui rend les responsabilités de libération floues et empêche de remonter les erreurs. Par ailleurs, *free()* prend en paramètre une adresse pour bien effacer la variable pointée et non une copie.
+
+Q3.2) Il faut N+1 appels à *calloc* et *free->* au total: un par ligne et le dernier pour la matrice elle-même. Si la k-ième allocation échoue (en numérotant les allocations de lignes de 1 à n), seules les lignes à partir de k ne sont pas allouées (donc null). Il faut donc libérer les lignes avant k, et la matrice elle-même donc (k-1) +1)) = k appels.
+
+Q3.3) Appeler *free()* deux fois est indéterminé car on ne connaît pas la donnée au deuxième appel (donnée d’un autre programme). Dans *mat_detruire*, on termine l'appel par **m = MATRICE_VIDE*. Donc au deuxième appel la condition
+*(m->coef!=NULL)* permet de ne pas appliquer le *free()* deux fois.
+Une copie de matrice en C est superficielle, B pointe vers les mêmes champs que A, donc si on libère A, B garde ses pointeurs vers une donnée inconnue, ce qui crée un comportement indéfini.
+
+Q3.4) On effectue l’affectation à la matrice nulle car une fonction qui échoue doit laisser *res à la matrice vide (dont les valeurs sont NULL) et libère les autres données. C’est la règle R3. Cela évite de rappeler *mat_detruire()* sur une donnée inconnue.
+
+## Exercice 2:
+### Code
+```text
+/* (2.a) */
+    for (int i = 0; i < m->nb_lignes; i++) {
+        for (int j = 0; j < m->nb_colonnes; j++)
+            printf(" %8d", m->coef[i][j]);
+
+        putchar('\n');
+    }
+
+/* (2.b) */
+    for (int i = 0; i < m->nb_lignes; i++) {
+        for (int j = 0; j < m->nb_colonnes; j++){
+            if ((fprintf(f, j == 0 ? "%d" : " %d", m->coef[i][j])) < 0)
+                return MAT_ERR_ECRITURE;
+        }
+
+        if ((fputc('\n', f)) == EOF)
+            return MAT_ERR_ECRITURE;
+    }
+
+/* (2.c) */
+    if (nb_lignes < 1 || nb_lignes > MAT_DIM_MAX)
+        return MAT_ERR_FORMAT;
+
+    if (nb_colonnes < 1 || nb_colonnes > MAT_DIM_MAX)
+        return MAT_ERR_FORMAT;
+
+// (2.d) À COMPLÉTER : déclarer une matrice LOCALE et l'allouer :
+    Matrice tmp;
+    err = mat_allouer(&tmp, nb_lignes, nb_colonnes);
+    if (err != MAT_OK) 
+        return err;
+
+/* (2.e) */
+    for (int i=0; i<nb_lignes; i++) {
+        for (int j=0; j<nb_colonnes; j++) {
+            err = lire_entier(f, &tmp.coef[i][j]);
+            if (err != MAT_OK) {
+                mat_detruire(&tmp);
+                return err;
+            }
+        }
+    }
+
+// (2.f) À COMPLÉTER : tout a réussi, on transfère le résultat :
+    *res = tmp;  
+    return MAT_OK;
+```
+### Execution
 ```text
 valgrind --leak-check=full ./test_ex2
 ==3754== Memcheck, a memory error detector
@@ -192,8 +244,64 @@ Pensez a verifier l'absence de fuite : valgrind --leak-check=full ./test_ex2
 ==3754== For lists of detected and suppressed errors, rerun with: -s
 ==3754== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
+### Questions
+Q4.1) La fonction *mat_lire()* remplit *tmp*, une variable locale, et non **res* directement : si une erreur survient au milieu du fichier, l’appelant ne recevra jamais une matrice à moitié remplie donc incorrecte, mais bien une matrice nulle.
 
-### Exercice 3 : Calcul matriciel et Scénario 9 — échec d'allocation simulé (`test_ex3`)
+Q4.2) La lecture ne vérifie pas que chaque ligne de texte correspond à une ligne de la matrice. Cela n’est pas gênant car on applique le principe “tolérant en lecture, strict en écriture” soit tolérant sur les espaces, tabulations ou sauts de lignes via *scanf* pour des fichiers écrits manuellement, mais on devient strict pour respecter le format canonique en écriture.
+
+Q4.3) En fin de fonction *mat_lire*, le flux pointe toujours vers le dernier coefficient lu. On peut donc suivre directement sur un autre appel de *mat_lire* sur le flux pour lire séquentiellement une autre matrice.
+
+Q4.4) L’instruction *flush* permet de vider le buffer de la mémoire vers le fichier en écriture. Cela est également effectué par *fclose* mais il est plus juste de faire cette opération manuellement.
+
+## Exercice 3:
+### Code
+```text
+
+/* (3.a) */
+    if (a->nb_lignes != b->nb_lignes)
+        return MAT_ERR_DIMENSIONS;
+    if (a->nb_colonnes != b->nb_colonnes)
+        return MAT_ERR_DIMENSIONS;
+
+/* (3.b) */
+    Matrice r = MATRICE_VIDE;
+    err = mat_allouer(&r, a->nb_lignes, a->nb_colonnes);
+    if (err != MAT_OK)
+        return err;
+
+/* (3.c) */
+    long long s = (long long)a->coef[i][j] + b->coef[i][j];
+
+// (3.d) À COMPLÉTER : transférer le résultat :
+    *res = r;  
+    return MAT_OK;
+
+/* (3.e) */
+    if (a->nb_colonnes != b->nb_lignes)
+        return MAT_ERR_DIMENSIONS;
+
+/* (3.f) */
+    Matrice r = MATRICE_VIDE;
+    err = mat_allouer(&r, a->nb_lignes, b->nb_colonnes);
+    if (err != MAT_OK)
+        return err;
+
+// (3.g) À COMPLÉTER : boucle sur k, de 0 à a->nb_colonnes - 1, qui ajoute à s le produit a(i,k) x b(k,j) :
+    for (int k = 0; k < a->nb_colonnes; k++) {
+        long long p = (long long)a->coef[i][k] * b->coef[k][j];
+        if ((p > 0 && s > LLONG_MAX - p)
+            || (p < 0 && s < LLONG_MIN - p)) {
+            mat_detruire(&r);
+            return MAT_ERR_DEPASSEMENT;
+        }
+        s += p;
+    }
+
+/* (3.h) À COMPLÉTER : *res = r;  return MAT_OK;                    */
+    *res = r;  
+    return MAT_OK;
+```
+### Execution
 
 ```text
 valgrind --leak-check=full ./test_ex3
@@ -232,11 +340,41 @@ Pensez a verifier l'absence de fuite : valgrind --leak-check=full ./test_ex3
 ==3764== For lists of detected and suppressed errors, rerun with: -s
 ==3764== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 ```
+### Questions
+Q5.1) Le préfixe const évite de modifier l’adresse des attributs de la matrice A lors des calculs, mais pas la valeur des coefficients pointés. Pour protéger les coeffs de A il faudrait passer toutes les lignes *int*** en *const*.
 
----
+Q5.2) Interdire l’alias *(mat_additionner(&a, &b, &a)* évite de modifier les données de A pendant le calcul en suivant les règles R3 / R5 en cas d’échec.
 
-## 3. Scénarios de test du programme principal (`demo_matrices`)
+Q5.3) Pour deux matrices de taille (n,p) et (p,q) il faut n*p*q multiplications d’entiers pour effectuer le produit matriciel. Avec des matrices carrées de taille 1000, il en faut 1000^3 soit 10^9.
 
+Q5.4) Si *(coef(a) + coef(b) > long long)*, on a une erreur de dépassement qui n’est pas repérée par s < a .
+
+## Exercice 4:
+### Code
+```text
+
+/* (4.a) À COMPLÉTER : afficher A et B avec mat_afficher.          */
+    mat_afficher("A", &a);
+    mat_afficher("B", &b);
+
+/* (4.b) */
+    MatErreur err = addition ? mat_additionner(&a, &b, &r) : mat_multiplier(&a, &b, &r);
+    if (err != MAT_OK) {
+        fprintf(stderr, "Erreur : calcul impossible : %s ",
+        mat_message_erreur(err));
+        fprintf(stderr, "(A : %d x %d, B : %d x %d)\n", a.nb_lignes, a.nb_colonnes, b.nb_lignes, b.nb_colonnes);
+        goto nettoyage;
+    }
+
+/* (4.c) À COMPLÉTER : afficher r (nom "R = A + B" ou "R = A x B").  */
+    addition ? mat_afficher("R = A + B", &r) : mat_afficher("R = A x B", &r);
+
+/* (4.d) */
+    printf("Résultat enregistré dans \"%s\".\n", argv[4]);
+
+    statut = EXIT_SUCCESS;
+```
+### Execution
 ### Scénario 1 : `add A.txt B.txt R.txt`
 **Comportement attendu :** affiche $A$, $B$, $R$ ; `R.txt` créé au format canonique (Sortie : `0`).
 
@@ -320,440 +458,13 @@ Résultat enregistré dans "R2.txt".
 ==3795== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 Code de sortie : 0
 ```
+### Questions
+Q6.1) On découple la gestion des erreurs et de l’affichage. Ainsi main est le programme principal qui peut donc être connecté à une interface graphique logicielle. On rend la bibliothèque indépendante.
 
-### Scénario 2 : `mul A.txt C.txt R.txt`
-**Comportement attendu :** affiche $A$, $B$, $R$ de dimensions $4 \times 2$ ; `R.txt` créé au format canonique (Sortie : `0`).
+Q6.2) Le test de *fclose* en écriture sert à valider que les tampons (buffers) en mémoire ont bien été vidés sur le disque (détection de disque plein), une vérification inutile en lecture car aucun buffer n’est utilisé. 
 
-```text
-valgrind --leak-check=full ./demo_matrices mul donnees/A.txt donnees/C.txt R.txt
-echo "Code de sortie : $?"
-==3810== Memcheck, a memory error detector
-==3764== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3810== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3810== Command: ./demo_matrices mul donnees/A.txt donnees/C.txt R.txt
-==3810==
-A (4 x 3) :
-       25       48       84
-       15       33       11
-       45       88       10
-        0       12       -5
-B (3 x 2) :
-        1        0
-        0        1
-        2       -1
-R = A x B (4 x 2) :
-      193      -36
-       37       22
-       65       78
-      -10       17
-Résultat enregistré dans "R.txt".
-==3810==
-==3810== HEAP SUMMARY:
-==3810==     in use at exit: 0 bytes in 0 blocks
-==3810==   total heap usage: 21 allocs, 21 frees, 14,920 bytes allocated
-==3810==
-==3810== All heap blocks were freed -- no leaks are possible
-==3810==
-==3810== For lists of detected and suppressed errors, rerun with: -s
-==3810== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 0
-```
-
-### Scénario 3 : `add A.txt C.txt R.txt`
-**Comportement attendu :** « dimensions incompatibles », avec les dimensions ; pas de fichier créé (Sortie : `1`).
-
-```text
-rm -f R.txt R2.txt
-valgrind --leak-check=full ./demo_matrices add donnees/A.txt donnees/C.txt R.txt
-echo "Code de sortie : $?"
-ls -l R.txt
-==3831== Memcheck, a memory error detector
-==3831== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3831== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3831== Command: ./demo_matrices add donnees/A.txt donnees/C.txt R.txt
-==3831==
-A (4 x 3) :
-       25       48       84
-       15       33       11
-       45       88       10
-        0       12       -5
-B (3 x 2) :
-        1        0
-        0        1
-        2       -1
-Erreur : calcul impossible : dimensions incompatibles (A : 4 x 3, B : 3 x 2)
-==3831==
-==3831== HEAP SUMMARY:
-==3831==     in use at exit: 0 bytes in 0 blocks
-==3831==   total heap usage: 14 allocs, 14 frees, 10,288 bytes allocated
-==3831==
-==3831== All heap blocks were freed -- no leaks are possible
-==3831== 
-==3831== For lists of detected and suppressed errors, rerun with: -s
-==3831== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 1
-ls: cannot access 'R.txt': No such file or directory
-```
-
-### Scénario 4 : `mul A.txt B.txt R.txt`
-**Comportement attendu :** « dimensions incompatibles », avec les dimensions ($4 \times 3$ par $4 \times 3$) ; pas de fichier créé (Sortie : `1`).
-
-```text
-valgrind --leak-check=full ./demo_matrices mul donnees/A.txt donnees/B.txt R.txt
-echo "Code de sortie : $?"
-==3852== Memcheck, a memory error detector
-==3852== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3852== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3852== Command: ./demo_matrices mul donnees/A.txt donnees/B.txt R.txt
-==3852==
-A (4 x 3) :
-       25       48       84
-       15       33       11
-       45       88       10
-        0       12       -5
-B (4 x 3) :
-        1        2        3
-        4        5        6
-        7        8        9
-       10       11       12
-Erreur : calcul impossible : dimensions incompatibles (A : 4 x 3, B : 4 x 3)
-==3852==
-==3852== HEAP SUMMARY:
-==3852==     in use at exit: 0 bytes in 0 blocks
-==3852==   total heap usage: 15 allocs, 15 frees, 10,320 bytes allocated
-==3852==
-==3852== All heap blocks were freed -- no leaks are possible
-==3852==
-==3852== For lists of detected and suppressed errors, rerun with: -s
-==3852== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 1
-```
-
-### Scénario 5 : Fichier `absent.txt`
-**Comportement attendu :** « impossible d'ouvrir » + cause système (Sortie : `1`).
-
-```text
-valgrind --leak-check=full ./demo_matrices add donnees/absent.txt donnees/B.txt R.txt
-echo "Code de sortie : $?"
-==3867== Memcheck, a memory error detector
-==3867== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3867== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3867== Command: ./demo_matrices add donnees/absent.txt donnees/B.txt R.txt
-==3867==
-Erreur : impossible d'ouvrir "donnees/absent.txt" : No such file or directory
-==3867==
-==3867== HEAP SUMMARY:
-==3867==     in use at exit: 0 bytes in 0 blocks
-==3867==   total heap usage: 3 allocs, 3 frees, 494 bytes allocated
-==3867==
-==3867== All heap blocks were freed -- no leaks are possible
-==3867== 
-==3867== For lists of detected and suppressed errors, rerun with: -s
-==3867== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 1
-```
-
-### Scénario 6 : `invalide.txt` comme $A$
-**Comportement attendu :** « fichier mal formé », avec le nom du fichier (Sortie : `1`).
-
-```text
-valgrind --leak-check=full ./demo_matrices add donnees/invalide.txt donnees/B.txt R.txt
-echo "Code de sortie : $?"
-==3882== Memcheck, a memory error detector
-==3882== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3882== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3882== Command: ./demo_matrices add donnees/invalide.txt donnees/B.txt R.txt
-==3882==
-Erreur : lecture de "donnees/invalide.txt" : fichier mal formé
-==3882== 
-==3882== HEAP SUMMARY:
-==3882==     in use at exit: 0 bytes in 0 blocks
-==3882==   total heap usage: 5 allocs, 5 frees, 4,600 bytes allocated
-==3882== 
-==3882== All heap blocks were freed -- no leaks are possible
-==3882==
-==3882== For lists of detected and suppressed errors, rerun with: -s
-==3882== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 1
-```
-
-### Scénario 7 : `tronque.txt` comme $A$
-**Comportement attendu :** « fichier mal formé » (Sortie : `1`).
-
-```text
-valgrind --leak-check=full ./demo_matrices add donnees/tronque.txt donnees/B.txt R.txt
-echo "Code de sortie : $?"
-==3897== Memcheck, a memory error detector
-==3897== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3897== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3897== Command: ./demo_matrices add donnees/tronque.txt donnees/B.txt R.txt
-==3897==
-Erreur : lecture de "donnees/tronque.txt" : fichier mal formé
-==3897==
-==3897== HEAP SUMMARY:
-==3897==     in use at exit: 0 bytes in 0 blocks
-==3897==   total heap usage: 6 allocs, 6 frees, 4,628 bytes allocated
-==3897==
-==3897== All heap blocks were freed -- no leaks are possible
-==3897==
-==3897== For lists of detected and suppressed errors, rerun with: -s
-==3897== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 1
-```
-
-### Scénario 8 : Résultat dans un dossier inexistant
-**Comportement attendu :** « impossible de créer » ; matrices libérées (Sortie : `1`).
-
-```text
-valgrind --leak-check=full ./demo_matrices add donnees/A.txt donnees/B.txt dossier_inexistant/R.txt
-echo "Code de sortie : $?"
-==3912== Memcheck, a memory error detector
-==3912== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3912== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3912== Command: ./demo_matrices add donnees/A.txt donnees/B.txt dossier_inexistant/R.txt
-==3912==
-A (4 x 3) :
-       25       48       84
-       15       33       11
-       45       88       10
-        0       12       -5
-B (4 x 3) :
-        1        2        3
-        4        5        6
-        7        8        9
-       10       11       12
-R = A + B (4 x 3) :
-       26       50       87
-       19       38       17
-       52       96       19
-       10       23        7
-Erreur : impossible de créer "dossier_inexistant/R.txt" : No such file or directory
-==3912==
-==3912== HEAP SUMMARY:
-==3912==     in use at exit: 0 bytes in 0 blocks
-==3912==   total heap usage: 23 allocs, 23 frees, 10,894 bytes allocated
-==3912==
-==3912== All heap blocks were freed -- no leaks are possible
-==3912==
-==3912== For lists of detected and suppressed errors, rerun with: -s
-==3912== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 1
-```
-
-### Scénario 10 : Arguments manquants ou opération inconnue
-**Comportement attendu :** message d'usage (Sortie : `1`).
-
-```text
-# Test 10a : arguments manquants
-valgrind --leak-check=full ./demo_matrices add donnees/A.txt
-echo "Code de sortie : $?"
-==3931== Memcheck, a memory error detector
-==3931== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3931== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3931== Command: ./demo_matrices add donnees/A.txt
-==3931== 
-Usage : ./demo_matrices <add|mul> <fichier_A> <fichier_B> <fichier_R>
-==3931== 
-==3931== HEAP SUMMARY:
-==3931==     in use at exit: 0 bytes in 0 blocks
-==3931==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
-==3931== 
-==3931== All heap blocks were freed -- no leaks are possible
-==3931== 
-==3931== For lists of detected and suppressed errors, rerun with: -s
-==3931== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 1
-```
-
-```text
-# Test 10b : opération inconnue ("sub" au lieu de "add" ou "mul")
-valgrind --leak-check=full ./demo_matrices sub donnees/A.txt donnees/B.txt R.txt
-echo "Code de sortie : $?"
-==3946== Memcheck, a memory error detector
-==3946== Copyright (C) 2002-2024, and GNU GPL'd, by Julian Seward et al.
-==3946== Using Valgrind-3.26.0 and LibVEX; rerun with -h for copyright info
-==3946== Command: ./demo_matrices sub donnees/A.txt donnees/B.txt R.txt
-==3946== 
-Usage : ./demo_matrices <add|mul> <fichier_A> <fichier_B> <fichier_R>
-==3946== 
-==3946== HEAP SUMMARY:
-==3946==     in use at exit: 0 bytes in 0 blocks
-==3946==   total heap usage: 0 allocs, 0 frees, 0 bytes allocated
-==3946== 
-==3946== All heap blocks were freed -- no leaks are possible
-==3946== 
-==3946== For lists of detected and suppressed errors, rerun with: -s
-==3946== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-Code de sortie : 1
-```
-
-## CODE :
-
-### Exercice 1 :\
-```text
-/* (1.a) */
-    case MAT_ERR_DIMENSIONS: return "dimensions incompatibles";
-    case MAT_ERR_DEPASSEMENT: return "resultat hors de l’intervalle des int";
-
-/* (1.b) */
-    return  m != NULL
-            && m->coef != NULL
-            && m->nb_lignes >= 1 && m->nb_lignes <= MAT_DIM_MAX
-            && m->nb_colonnes >= 1 && m->nb_colonnes <= MAT_DIM_MAX;
-
-/* (1.c) */
-    if (nb_lignes < 1 || nb_lignes > MAT_DIM_MAX)
-        return MAT_ERR_ARGUMENT;
-
-    if (nb_colonnes < 1 || nb_colonnes > MAT_DIM_MAX)
-        return MAT_ERR_ARGUMENT;
-
-/* (1.d) */
-    for (int i = 0; i < nb_lignes; i++) {
-        coef[i] = mat_calloc((size_t)nb_colonnes, sizeof *coef[i]);    // nb_colonnes entiers
-        if (coef[i] == NULL) {
-            for (int k = i - 1; k >= 0; k--)  // lignes déjà
-                free(coef[k]);                // obtenues
-            free(coef);                       // puis le tableau
-            return MAT_ERR_ALLOCATION;
-        }
-    }
-
-/* (1.e) */
-    res->coef = coef;
-    res->nb_lignes = nb_lignes;
-    res->nb_colonnes = nb_colonnes;
-
-    return MAT_OK;
-
-/* (1.f) */
-    for (int j = 0 ; j < m->nb_lignes; j++)  // lignes déjà
-        free(m->coef[j]);                // obtenues
-
-    free(m->coef); 
+Q6.3) Dans le scénario 8, si l'enregistrement échoue après un calcul réussi, la matrice R a bien été allouée et il faut donc libérer 3 matrices -> A, B et R. Le *goto nettoyage* s’en charge correctement. 
 
 
-    *m = MATRICE_VIDE;   /* FOURNI : état sûr après destruction (R6) */
-```
 
-### Exercice 2 :\
-```text
-/* (2.a) */
-    for (int i = 0; i < m->nb_lignes; i++) {
-        for (int j = 0; j < m->nb_colonnes; j++)
-            printf(" %8d", m->coef[i][j]);
 
-        putchar('\n');
-    }
-
-/* (2.b) */
-    for (int i = 0; i < m->nb_lignes; i++) {
-        for (int j = 0; j < m->nb_colonnes; j++){
-            if ((fprintf(f, j == 0 ? "%d" : " %d", m->coef[i][j])) < 0)
-                return MAT_ERR_ECRITURE;
-        }
-
-        if ((fputc('\n', f)) == EOF)
-            return MAT_ERR_ECRITURE;
-    }
-
-/* (2.c) */
-    if (nb_lignes < 1 || nb_lignes > MAT_DIM_MAX)
-        return MAT_ERR_FORMAT;
-
-    if (nb_colonnes < 1 || nb_colonnes > MAT_DIM_MAX)
-        return MAT_ERR_FORMAT;
-
-// (2.d) À COMPLÉTER : déclarer une matrice LOCALE et l'allouer :
-    Matrice tmp;
-    err = mat_allouer(&tmp, nb_lignes, nb_colonnes);
-    if (err != MAT_OK) 
-        return err;
-
-/* (2.e) */
-    for (int i=0; i<nb_lignes; i++) {
-        for (int j=0; j<nb_colonnes; j++) {
-            err = lire_entier(f, &tmp.coef[i][j]);
-            if (err != MAT_OK) {
-                mat_detruire(&tmp);
-                return err;
-            }
-        }
-    }
-
-// (2.f) À COMPLÉTER : tout a réussi, on transfère le résultat :
-    *res = tmp;  
-    return MAT_OK;
-```
-
-### Exercice 3 :\
-```text
-
-/* (3.a) */
-    if (a->nb_lignes != b->nb_lignes)
-        return MAT_ERR_DIMENSIONS;
-    if (a->nb_colonnes != b->nb_colonnes)
-        return MAT_ERR_DIMENSIONS;
-
-/* (3.b) */
-    Matrice r = MATRICE_VIDE;
-    err = mat_allouer(&r, a->nb_lignes, a->nb_colonnes);
-    if (err != MAT_OK)
-        return err;
-
-/* (3.c) */
-    long long s = (long long)a->coef[i][j] + b->coef[i][j];
-
-// (3.d) À COMPLÉTER : transférer le résultat :
-    *res = r;  
-    return MAT_OK;
-
-/* (3.e) */
-    if (a->nb_colonnes != b->nb_lignes)
-        return MAT_ERR_DIMENSIONS;
-
-/* (3.f) */
-    Matrice r = MATRICE_VIDE;
-    err = mat_allouer(&r, a->nb_lignes, b->nb_colonnes);
-    if (err != MAT_OK)
-        return err;
-
-// (3.g) À COMPLÉTER : boucle sur k, de 0 à a->nb_colonnes - 1, qui ajoute à s le produit a(i,k) x b(k,j) :
-    for (int k = 0; k < a->nb_colonnes; k++) {
-        long long p = (long long)a->coef[i][k] * b->coef[k][j];
-        if ((p > 0 && s > LLONG_MAX - p)
-            || (p < 0 && s < LLONG_MIN - p)) {
-            mat_detruire(&r);
-            return MAT_ERR_DEPASSEMENT;
-        }
-        s += p;
-    }
-
-/* (3.h) À COMPLÉTER : *res = r;  return MAT_OK;                    */
-    *res = r;  
-    return MAT_OK;
-```
-
-### Exercice 4 :\
-```text
-
-/* (4.a) À COMPLÉTER : afficher A et B avec mat_afficher.          */
-    mat_afficher("A", &a);
-    mat_afficher("B", &b);
-
-/* (4.b) */
-    MatErreur err = addition ? mat_additionner(&a, &b, &r) : mat_multiplier(&a, &b, &r);
-    if (err != MAT_OK) {
-        fprintf(stderr, "Erreur : calcul impossible : %s ",
-        mat_message_erreur(err));
-        fprintf(stderr, "(A : %d x %d, B : %d x %d)\n", a.nb_lignes, a.nb_colonnes, b.nb_lignes, b.nb_colonnes);
-        goto nettoyage;
-    }
-
-/* (4.c) À COMPLÉTER : afficher r (nom "R = A + B" ou "R = A x B").  */
-    addition ? mat_afficher("R = A + B", &r) : mat_afficher("R = A x B", &r);
-
-/* (4.d) */
-    printf("Résultat enregistré dans \"%s\".\n", argv[4]);
-    statut = EXIT_SUCCESS;
-```
