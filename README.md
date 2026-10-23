@@ -587,9 +587,9 @@ Usage : ./demo_matrices <add|mul> <fichier_A> <fichier_B> <fichier_R>
 Code de sortie : 1
 ```
 
-### CODE :
+## CODE :
 
-## Exercice 1 :\
+### Exercice 1 :\
 ```text
 /* (1.a) */
     case MAT_ERR_DIMENSIONS: return "dimensions incompatibles";
